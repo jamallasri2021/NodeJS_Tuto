@@ -38,13 +38,17 @@ app.get('/', (request, response) => {
 
 app.post('/', (request, response) => {
     let msg = request.body.message;
-    request.flash('error', "You didn't type a message");
     if (msg === undefined || msg === '') {
         //response.render('pages/index', { error: "You didn't type a message :(" });
-        response.redirect('/');
-    } else{
-        
+        request.flash('error', "You didn't type a message :(");
+    } else {
+        let Message = require('./models/message');
+        Message.create(request.body.message, () => {
+            request.flash('success', 'Done :)');
+        });
     }
+
+    response.redirect('/');
 });
 //#endregion
 
